@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>暑期中文複習樂園</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Noto Sans TC','PingFang TC','Microsoft JhengHei','蘋方-繁',sans-serif;background:#FFF8F0;min-height:100vh;overflow-x:hidden;padding-bottom:70px;}
+:root{
+  --warm:#FF8C42;--warm-light:#FFD4A8;
+  --green:#4CAF7D;--green-light:#C8F0D8;
+  --blue:#5B9BD5;--blue-light:#D0E8FF;
+  --red:#E8534A;--purple:#7C5CBF;--purple-light:#EDE7F6;
+  --teal:#00897B;--teal-light:#E0F2F1;
+  --text:#3D2B1F;--muted:#8B6F5E;
+}
+.hidden{display:none!important;}
+
+/* ===== HEADER ===== */
+.app-header{background:linear-gradient(135deg,#FF8C42 0%,#FFB347 100%);padding:16px 18px 13px;text-align:center;position:relative;}
+.app-title{font-size:26px;font-weight:900;color:#fff;letter-spacing:3px;text-shadow:0 2px 4px rgba(0,0,0,0.15);}
+.app-subtitle{font-size:12px;color:rgba(255,255,255,0.92);margin-top:4px;}
+.header-btns{position:absolute;top:50%;right:12px;transform:translateY(-50%);display:flex;gap:6px;}
+.hbtn{background:rgba(255,255,255,0.25);border:2px solid rgba(255,255,255,0.6);color:#fff;border-radius:18px;padding:6px 11px;font-size:12px;cursor:pointer;font-weight:700;}
+.hbtn:active{opacity:0.8;}
+
+/* ===== MANAGER ===== */
+.mgr-panel{background:#FFF3E0;border-bottom:3px solid var(--warm);padding:14px 16px;display:none;}
+.mgr-panel.open{display:block;}
+.mgr-title{font-size:15px;font-weight:800;color:#BF5E00;margin-bottom:6px;}
+.mgr-hint{font-size:11px;color:#8B6F5E;margin-bottom:8px;line-height:1.6;}
+.mgr-hint code{background:#FFE0B2;padding:1px 5px;border-radius:4px;font-family:monospace;}
+.mgr-textarea{width:100%;height:110px;border:2px solid #FFCC80;border-radius:10px;padding:9px;font-size:13px;font-family:inherit;resize:vertical;outline:none;background:#fff;line-height:1.8;}
+.mgr-textarea:focus{border-color:var(--warm);}
+.mgr-btn{background:var(--warm);color:#fff;border:none;border-radius:20px;padding:10px 24px;font-size:14px;font-weight:800;cursor:pointer;margin-top:9px;display:block;width:100%;}
+.mgr-btn:active{transform:scale(0.97);}
+.mgr-reset-btn{background:#E8EAF6;color:#3949AB;border:none;border-radius:20px;padding:8px 18px;font-size:12px;font-weight:700;cursor:pointer;margin-top:8px;width:100%;}
+
+/* ===== HOME / LEVEL MAP ===== */
+.home-wrap{padding:18px 16px 30px;max-width:560px;margin:0 auto;}
+.review-banner{
+  background:linear-gradient(135deg,#FFE0B2,#FFD180);border:3px solid var(--warm);
+  border-radius:20px;padding:16px 18px;margin-bottom:18px;display:flex;align-items:center;gap:14px;cursor:pointer;
+}
+.review-banner:active{transform:scale(0.98);}
+.review-banner-icon{font-size:34px;flex-shrink:0;}
+.review-banner-text{flex:1;}
+.review-banner-title{font-size:15px;font-weight:800;color:#7A4400;}
+.review-banner-sub{font-size:12px;color:#8B5A00;margin-top:2px;}
+.review-banner-count{font-size:26px;font-weight:900;color:#BF5E00;}
+
+.level-map-title{text-align:center;font-size:19px;font-weight:800;color:var(--text);margin-bottom:4px;}
+.level-map-sub{text-align:center;font-size:12px;color:var(--muted);margin-bottom:18px;}
+.level-path{display:flex;flex-direction:column;gap:14px;}
+.level-card{display:flex;align-items:center;gap:14px;background:#fff;border:3px solid #FFD4A8;border-radius:18px;padding:15px;cursor:pointer;transition:all 0.2s;position:relative;}
+.level-card:active{transform:scale(0.97);}
+.level-card.locked{opacity:0.55;cursor:not-allowed;background:#F5F0EA;border-color:#E8DCC8;}
+.level-card.completed{border-color:var(--green);background:var(--green-light);}
+.level-card.current{border-color:var(--warm);box-shadow:0 4px 14px rgba(255,140,66,0.25);animation:levelPulse 1.6s ease infinite;}
+@keyframes levelPulse{0%,100%{box-shadow:0 4px 14px rgba(255,140,66,0.25)}50%{box-shadow:0 4px 24px rgba(255,140,66,0.5)}}
+.level-num{width:48px;height:48px;border-radius:50%;background:var(--warm-light);color:var(--warm);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;flex-shrink:0;}
+.level-card.completed .level-num{background:var(--green);color:#fff;}
+.level-card.locked .level-num{background:#E8DCC8;color:#B5A48F;}
+.level-info{flex:1;}
+.level-name{font-size:16px;font-weight:800;color:var(--text);}
+.level-desc{font-size:11px;color:var(--muted);margin-top:2px;}
+.level-boss-tag{display:inline-block;background:#FFE0B2;color:#BF5E00;font-size:10px;font-weight:800;padding:1px 7px;border-radius:8px;margin-left:6px;vertical-align:middle;}
+.level-status{font-size:22px;flex-shrink:0;}
+.level-connector{width:4px;height:12px;background:#FFD4A8;margin:0 auto;border-radius:2px;}
+.level-connector.completed{background:var(--green);}
+.errbook-card{
+  display:flex;align-items:center;gap:14px;background:#fff;border:3px solid var(--purple);
+  border-radius:18px;padding:15px;cursor:pointer;margin-top:18px;
+}
+.errbook-card:active{transform:scale(0.97);}
+.errbook-num{width:48px;height:48px;border-radius:50%;background:var(--purple-light);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.errbook-badge{background:var(--red);color:#fff;font-size:11px;font-weight:800;border-radius:10px;padding:2px 8px;}
+
+/* back btn */
+.back-to-map-btn{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);background:#fff;border:3px solid var(--warm);color:var(--warm);border-radius:22px;padding:9px 20px;font-size:13px;font-weight:800;cursor:pointer;z-index:80;box-shadow:0 4px 14px rgba(0,0,0,0.15);display:flex;align-items:center;gap:5px;}
+.back-to-map-btn:active{transform:translateX(-50%) scale(0.95);}
+
+/* ===== SECTIONS ===== */
+.section{padding:16px 14px;display:none;max-width:560px;margin:0 auto;}
+.section.active{display:block;}
+.game-header{text-align:center;margin-bottom:14px;}
+.game-header h2{font-size:19px;font-weight:800;color:var(--text);}
+.game-header p{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5;}
+.progress-bar{background:#FFD4A8;border-radius:10px;height:9px;margin:9px 0 4px;overflow:hidden;}
+.progress-fill{background:var(--warm);height:100%;border-radius:10px;transition:width 0.45s;}
+.score-text{font-size:11px;color:var(--muted);margin-bottom:12px;}
+
+/* ===== MATCHING (關卡1) ===== */
+.match-board{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.match-col{display:flex;flex-direction:column;gap:9px;}
+.match-card{background:#fff;border:3px solid #FFD4A8;border-radius:16px;padding:14px 8px;text-align:center;cursor:pointer;transition:all 0.2s;min-height:62px;display:flex;align-items:center;justify-content:center;user-select:none;}
+.match-card.char-card{font-size:21px;font-weight:800;color:var(--text);}
+.match-card.zhu-card{font-size:13px;font-weight:700;color:var(--purple);line-height:1.5;}
+.match-card.selected{border-color:var(--blue);background:var(--blue-light);transform:scale(1.05);}
+.match-card.matched{border-color:var(--green);background:var(--green-light);cursor:default;animation:matchPop 0.4s ease;}
+.match-card.wrong{border-color:var(--red);background:#FFE8E7;animation:shake 0.45s ease;}
+@keyframes matchPop{0%{transform:scale(1)}40%{transform:scale(1.1)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}60%{transform:translateX(7px)}}
+.star-burst{position:fixed;pointer-events:none;z-index:999;font-size:24px;animation:starFly 0.85s ease-out forwards;}
+@keyframes starFly{0%{transform:scale(0) rotate(0deg);opacity:1}100%{transform:scale(1.5) rotate(200deg) translateY(-50px);opacity:0}}
+
+.game-result{text-align:center;margin-top:16px;padding:18px;border-radius:18px;background:var(--green-light);border:3px solid var(--green);display:none;}
+.game-result.show{display:block;}
+.result-emoji{font-size:36px;margin-bottom:6px;}
+.result-text{font-size:19px;font-weight:800;color:#2E7D50;}
+.reset-btn{background:var(--warm);color:#fff;border:none;border-radius:20px;padding:12px 28px;font-size:15px;font-weight:800;cursor:pointer;margin-top:10px;}
+.reset-btn:active{transform:scale(0.96);}
+
+/* ===== RECALL WRITE (關卡2 / Boss關3) ===== */
+.recall-stage{text-align:center;}
+.recall-instruction{font-size:13px;color:var(--muted);margin-bottom:10px;font-weight:700;}
+.recall-flash-word{
+  font-size:54px;font-weight:900;color:var(--text);letter-spacing:8px;
+  padding:30px 10px;background:#fff;border-radius:20px;border:3px solid var(--warm-light);
+  margin-bottom:6px;
+}
+.recall-timer-bar{height:8px;background:#FFD4A8;border-radius:6px;overflow:hidden;margin:0 auto 6px;max-width:300px;}
+.recall-timer-fill{height:100%;background:var(--warm);width:100%;}
+.recall-countdown-text{font-size:13px;color:var(--muted);margin-bottom:6px;}
+.recall-zhuyin-playback{font-size:24px;color:var(--purple);font-weight:800;letter-spacing:6px;padding:24px 10px;}
+.recall-write-label{font-size:13px;color:var(--muted);margin-bottom:8px;font-weight:700;}
+.canvases-row{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:0 auto 12px;}
+.char-slot{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.char-slot-zhu{font-size:13px;color:var(--purple);font-weight:700;text-align:center;min-height:18px;}
+.char-canvas-wrap{position:relative;}
+.char-canvas-wrap canvas.wc{border:3px solid #FFD4A8;border-radius:12px;background:#FFFDF9;display:block;touch-action:none;cursor:crosshair;}
+.char-canvas-wrap canvas.gc{position:absolute;top:0;left:0;border-radius:12px;pointer-events:none;opacity:0;transition:opacity 0.5s;}
+.char-canvas-wrap.show-guide canvas.gc{opacity:0.22;}
+.char-canvas-wrap.show-hint-radical{border-color:#E8534A;}
+.hint-radical-label{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:#E8534A;color:#fff;font-size:10px;padding:1px 7px;border-radius:8px;white-space:nowrap;}
+
+.recall-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:400px;margin:0 auto;}
+.recall-btn{border:none;border-radius:14px;padding:13px 7px;font-size:14px;font-weight:800;cursor:pointer;transition:all 0.15s;font-family:inherit;}
+.recall-btn:active{transform:scale(0.95);}
+.btn-clear{background:#FFE0B2;color:#BF5E00;}
+.btn-eraser{background:#E8EAF6;color:#3949AB;}
+.btn-eraser.active-tool{background:#3949AB;color:#fff;}
+.btn-submit{background:var(--green);color:#fff;grid-column:1/-1;font-size:16px;}
+.btn-hint{background:#FFF3E0;color:#E65100;border:2px solid #FFCC80;grid-column:1/-1;}
+
+.feedback-banner{
+  margin:14px auto 0;max-width:420px;padding:14px;border-radius:16px;text-align:center;
+  font-size:15px;font-weight:800;display:none;
+}
+.feedback-banner.show{display:block;}
+.feedback-banner.success{background:var(--green-light);color:#2E7D50;border:3px solid var(--green);}
+.feedback-banner.encourage{background:#FFF3E0;color:#BF5E00;border:3px solid var(--warm);}
+.feedback-sub{font-size:12px;font-weight:500;margin-top:4px;color:var(--muted);}
+.feedback-next-btn{background:var(--warm);color:#fff;border:none;border-radius:18px;padding:11px 26px;font-size:14px;font-weight:800;cursor:pointer;margin-top:10px;}
+.feedback-next-btn:active{transform:scale(0.96);}
+
+/* hint level badges */
+.hint-progress{display:flex;justify-content:center;gap:6px;margin-bottom:10px;}
+.hint-dot{width:9px;height:9px;border-radius:50%;background:#FFD4A8;}
+.hint-dot.used{background:var(--warm);}
+.hint-display{
+  max-width:380px;margin:0 auto 12px;padding:12px 16px;border-radius:14px;
+  background:#FFF3E0;border:2px solid #FFCC80;font-size:14px;color:#7A4400;
+  text-align:center;display:none;font-weight:700;
+}
+.hint-display.show{display:block;}
+
+/* ===== LISTEN (Boss關) ===== */
+.listen-btn-wrap{display:flex;justify-content:center;margin-bottom:14px;}
+.listen-play-btn{background:var(--teal);color:#fff;border:none;border-radius:50%;width:78px;height:78px;font-size:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,137,123,0.35);transition:all 0.15s;}
+.listen-play-btn:active{transform:scale(0.92);}
+.listen-play-btn.playing{background:#00695C;animation:pulse 0.6s ease infinite alternate;}
+@keyframes pulse{0%{box-shadow:0 4px 14px rgba(0,137,123,0.35)}100%{box-shadow:0 4px 26px rgba(0,137,123,0.6)}}
+.boss-tag-banner{text-align:center;background:linear-gradient(135deg,#7C5CBF,#9575CD);color:#fff;padding:8px;border-radius:14px;font-size:13px;font-weight:800;margin-bottom:14px;}
+
+/* ===== ERROR BOOK ===== */
+.errbook-list{display:flex;flex-direction:column;gap:10px;}
+.errbook-item{background:#fff;border:3px solid #FFD4A8;border-radius:16px;padding:14px;display:flex;align-items:center;gap:12px;}
+.errbook-word{font-size:24px;font-weight:800;color:var(--text);flex-shrink:0;min-width:64px;}
+.errbook-meta{flex:1;}
+.errbook-zhuyin{font-size:13px;color:var(--purple);font-weight:700;}
+.errbook-stat{font-size:11px;color:var(--muted);margin-top:2px;}
+.errbook-actions{display:flex;flex-direction:column;gap:6px;}
+.eb-btn{border:none;border-radius:12px;padding:7px 12px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;}
+.eb-btn-practice{background:var(--purple);color:#fff;}
+.eb-btn-mastered{background:var(--green-light);color:#2E7D50;}
+.errbook-empty{text-align:center;padding:40px 20px;color:var(--muted);}
+.errbook-empty-emoji{font-size:48px;margin-bottom:10px;}
+
+/* ===== PUZZLE (錯字本練習工具) ===== */
+.puzzle-word-display{font-size:36px;font-weight:900;color:var(--text);text-align:center;letter-spacing:7px;margin-bottom:3px;}
+.puzzle-hint{font-size:11px;color:var(--muted);text-align:center;margin-bottom:12px;}
+.puzzle-chars{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;}
+.puzzle-char-block{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.puzzle-char-label{font-size:22px;font-weight:900;color:var(--text);}
+.puzzle-answer-label{font-size:11px;color:var(--muted);margin-bottom:1px;}
+.puzzle-drop-zone{display:flex;flex-wrap:wrap;gap:5px;min-height:48px;border:3px dashed #FFCC80;border-radius:12px;padding:7px 9px;background:#FFFDF9;justify-content:center;align-items:center;min-width:108px;transition:background 0.2s;}
+.puzzle-drop-zone.drag-over{background:var(--warm-light);}
+.puzzle-drop-zone.correct{border-color:var(--green);background:var(--green-light);}
+.puzzle-drop-zone.wrong-flash{border-color:var(--red);background:#FFE8E7;animation:shake 0.4s ease;}
+.piece{background:#fff;border:2px solid #FFCC80;border-radius:9px;padding:7px 11px;font-size:16px;font-weight:800;color:var(--purple);cursor:grab;user-select:none;touch-action:none;}
+.piece:active{transform:scale(1.08);cursor:grabbing;}
+.puzzle-pool-label{font-size:11px;color:var(--muted);text-align:center;margin:10px 0 5px;}
+.puzzle-pool{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;min-height:44px;padding:7px;border-radius:12px;background:#F5F0FF;border:2px dashed #C5B3E6;}
+.puzzle-btns{display:flex;gap:9px;margin-top:12px;justify-content:center;flex-wrap:wrap;}
+.puzzle-btn{border:none;border-radius:14px;padding:11px 18px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;}
+.puzzle-btn:active{transform:scale(0.95);}
+.pbtn-check{background:var(--purple);color:#fff;}
+.pbtn-clear{background:#E8EAF6;color:#3949AB;}
+
+/* ===== QUEST COMPLETE ===== */
+.quest-complete{text-align:center;padding:28px 18px;max-width:460px;margin:24px auto;background:linear-gradient(135deg,#FFF3E0,#FFE0B2);border-radius:22px;border:3px solid var(--warm);}
+.quest-complete-emoji{font-size:50px;margin-bottom:8px;}
+.quest-complete-title{font-size:21px;font-weight:900;color:#BF5E00;margin-bottom:5px;}
+.quest-complete-sub{font-size:13px;color:var(--muted);margin-bottom:16px;}
+.quest-stars{font-size:30px;margin-bottom:16px;letter-spacing:6px;}
+
+/* ===== CONFETTI ===== */
+.celebration{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1000;overflow:hidden;}
+.confetti{position:absolute;border-radius:2px;animation:confettiFall linear forwards;}
+@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(105vh) rotate(720deg);opacity:0}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="app-header">
+  <div class="app-title">📚 中文複習樂園</div>
+  <div class="app-subtitle">二年級暑假加油站 🌟</div>
+  <div class="header-btns">
+    <button class="hbtn" onclick="goHome()">🏠 首頁</button>
+    <button class="hbtn" onclick="toggleMgr()">⚙️ 老師</button>
+  </div>
+</div>
+
+<!-- MANAGER -->
+<div class="mgr-panel" id="mgrPanel">
+  <div class="mgr-title">👩‍🏫 老師／家長管理區</div>
+  <div class="mgr-hint">
+    每行一組，格式：<code>國字,注音</code>（部首筆畫選填）<br>
+    完整格式：<code>國字,注音,部首1:筆畫1|部首2:筆畫2...</code><br>
+    例：<code>路燈,ㄌㄨˋ ㄉㄥ,足字旁:13|火字旁:16</code>　（部首筆畫沒填也能玩，只是提示會少一點）
+  </div>
+  <textarea class="mgr-textarea" id="wordInput"
+    placeholder="路燈,ㄌㄨˋ ㄉㄥ,足字旁:13|火字旁:16&#10;清洗,ㄑㄧㄥ ㄒㄧˇ,水字旁(氵):11|水字旁(氵):9&#10;前面,ㄑㄧㄢˊ ㄇㄧㄢˋ&#10;學校,ㄒㄩㄝˊ ㄒㄧㄠˋ&#10;朋友,ㄆㄥˊ ㄧㄡˇ"></textarea>
+  <button class="mgr-btn" onclick="updateWords()">✅ 更新題目</button>
+  <button class="mgr-reset-btn" onclick="resetAllProgress()">🗑️ 清空所有學習紀錄（重新開始）</button>
+</div>
+
+<!-- ============ HOME / LEVEL MAP ============ -->
+<div class="section active" id="section-home">
+  <div class="home-wrap">
+
+    <div class="review-banner" id="reviewBanner" onclick="startReviewSession()" style="display:none">
+      <div class="review-banner-icon">⏰</div>
+      <div class="review-banner-text">
+        <div class="review-banner-title">今日待複習</div>
+        <div class="review-banner-sub">點我開始複習，溫故知新！</div>
+      </div>
+      <div class="review-banner-count" id="reviewCount">0</div>
+    </div>
+
+    <div class="level-map-title">🗺️ 闖關地圖</div>
+    <div class="level-map-sub">完成上一關才能解鎖下一關喔！</div>
+
+    <div class="level-path" id="levelPath"></div>
+
+    <div class="errbook-card" onclick="openErrorBook()">
+      <div class="errbook-num">📕</div>
+      <div class="level-info">
+        <div class="level-name">我的錯字本</div>
+        <div class="level-desc">複習答錯或用過提示的字</div>
+      </div>
+      <div class="errbook-badge" id="errbookBadge" style="display:none">0</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ 關卡1：連連看 ============ -->
+<div class="section" id="section-match">
+  <div class="game-header">
+    <h2>🎯 第一關：連連看</h2>
+    <p>點左邊的字，再點右邊的注音來配對！</p>
+    <div class="progress-bar"><div class="progress-fill" id="matchProgress" style="width:0%"></div></div>
+    <div class="score-text" id="matchScore">已配對 0 / 0 對</div>
+  </div>
+  <div class="match-board"><div class="match-col" id="charCol"></div><div class="match-col" id="zhuCol"></div></div>
+  <div class="game-result" id="matchResult">
+    <div class="result-emoji">🎉</div>
+    <div class="result-text">第一關過關！認字成功！</div>
+    <button class="reset-btn" onclick="goToLevelComplete(1)">前往下一關 ➡️</button>
+  </div>
+</div>
+<button class="back-to-map-btn" id="backBtnMatch" onclick="goHome()">🗺️ 回地圖</button>
+
+<!-- ============ 關卡2：看字默寫 ============ -->
+<div class="section" id="section-recall">
+  <div class="game-header">
+    <h2>✏️ 第二關：看字默寫</h2>
+    <p>仔細看詞語，3 秒後它會消失，靠記憶把它寫出來！</p>
+    <div class="progress-bar"><div class="progress-fill" id="recallProgress" style="width:0%"></div></div>
+    <div class="score-text" id="recallCounter">第 1 題 / 共 5 題</div>
+  </div>
+
+  <div class="recall-stage" id="recallStage">
+    <!-- 動態切換：flash 階段 / write 階段 -->
+  </div>
+</div>
+<button class="back-to-map-btn" id="backBtnRecall" onclick="goHome()">🗺️ 回地圖</button>
+
+<!-- ============ 關卡3：聽音寫字（Boss） ============ -->
+<div class="section" id="section-boss">
+  <div class="boss-tag-banner">👑 Boss 關卡：模擬考試，全靠自己！</div>
+  <div class="game-header">
+    <h2>🔊 第三關：聽音寫字</h2>
+    <p>按喇叭聽詞語的注音，自己寫出國字和注音！</p>
+    <div class="progress-bar"><div class="progress-fill" id="bossProgress" style="width:0%"></div></div>
+    <div class="score-text" id="bossCounter">第 1 題 / 共 5 題</div>
+  </div>
+  <div class="listen-btn-wrap"><button class="listen-play-btn" id="bossPlayBtn" onclick="speakBossWord()">🔊</button></div>
+  <div id="bossWriteArea"></div>
+</div>
+<button class="back-to-map-btn" id="backBtnBoss" onclick="goHome()">🗺️ 回地圖</button>
+
+<!-- ============ 闖關完成 ============ -->
+<div class="section" id="section-questcomplete">
+  <div class="quest-complete">
+    <div class="quest-complete-emoji">🏆</div>
+    <div class="quest-complete-title">恭喜全部過關！</div>
+    <div class="quest-complete-sub">你已經完成今天的三個關卡，太棒了！</div>
+    <div class="quest-stars">⭐⭐⭐</div>
+    <button class="reset-btn" onclick="goHome()">🗺️ 回到地圖</button>
+  </div>
+</div>
+
+<!-- ============ 我的錯字本 ============ -->
+<div class="section" id="section-errbook">
+  <div class="game-header">
+    <h2>📕 我的錯字本</h2>
+    <p>這些字曾經答錯或用過提示，多練習幾次就會記得更牢！</p>
+  </div>
+  <div class="errbook-list" id="errbookList"></div>
+</div>
+<button class="back-to-map-btn" id="backBtnErrbook" onclick="goHome()">🗺️ 回地圖</button>
+
+<!-- ============ 錯字本練習：注音積木拼拼樂 ============ -->
+<div class="section" id="section-puzzle">
+  <div class="game-header">
+    <h2>🧩 注音積木拼拼樂</h2>
+    <p>把打散的注音積木，拖進對應字的格子裡！</p>
+  </div>
+  <div class="puzzle-word-display" id="puzzleWord">過年</div>
+  <div class="puzzle-hint">每個字的格子裡，放入正確的聲母、韻母和聲調 👇</div>
+  <div class="puzzle-chars" id="puzzleChars"></div>
+  <div class="puzzle-pool-label">📦 注音積木庫（從這裡拖走）</div>
+  <div class="puzzle-pool" id="puzzlePool"></div>
+  <div class="puzzle-btns">
+    <button class="puzzle-btn pbtn-clear" onclick="resetPuzzle()">🔄 清空重來</button>
+    <button class="puzzle-btn pbtn-check" onclick="checkPuzzle()">✅ 確認答案</button>
+  </div>
+  <div class="game-result" id="puzzleResult">
+    <div class="result-emoji">🌟</div>
+    <div class="result-text">拼對了！這個字練熟了！</div>
+    <button class="reset-btn" onclick="markPuzzleWordMastered()">標記為已學會</button>
+  </div>
+</div>
+<button class="back-to-map-btn" id="backBtnPuzzle" onclick="openErrorBook()">📕 回錯字本</button>
+
+<div class="celebration" id="celebration"></div>
+
+<script>
+/* ============================================================
+   部首/筆畫資料：由老師在後台輸入（格式：國字,注音,部首,筆畫）
+   解析後存成 { "路":{radicalNote:"足字旁", strokes:13}, ... }
+   若老師沒填部首或筆畫，對應提示會優雅省略。
+============================================================ */
+var CHAR_DB = {};
+
+function rebuildCharDB(){
+  CHAR_DB = {};
+  wordPairs.forEach(function(pair){
+    if(!pair.radicalMap) return;
+    Object.keys(pair.radicalMap).forEach(function(ch){
+      CHAR_DB[ch] = pair.radicalMap[ch];
+    });
+  });
+}
+
+/* 根據字找部首資料，找不到時回傳 null（之後會優雅降級） */
+function lookupChar(ch){ return CHAR_DB[ch] || null; }
+
+/* ============================================================
+   localStorage 工具
+============================================================ */
+var LS_WORDS = 'czl_wordPairs';
+var LS_ERRBOOK = 'czl_errorBook';      // { "路燈": {errorCount, lastReview, nextReview, correctStreak} }
+var LS_PROGRESS = 'czl_questProgress'; // { level1Done, level2Done, level3Done, date }
+var LS_ROTATION = 'czl_rotation';      // { recall:{coveredWords:[...]}, boss:{coveredWords:[...]} }
+
+function lsGet(key, fallback){
+  try{ var v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
+  catch(e){ return fallback; }
+}
+function lsSet(key, val){
+  try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){}
+}
+
+/* ============================================================
+   資料：詞彙
+============================================================ */
+var defaultWordPairs = [
+  {w:"路燈", z:"ㄌㄨˋ ㄉㄥ", radicalMap:{"路":{radicalNote:"足字旁",strokes:13},"燈":{radicalNote:"火字旁",strokes:16}}},
+  {w:"清洗", z:"ㄑㄧㄥ ㄒㄧˇ", radicalMap:{"清":{radicalNote:"水字旁(氵)",strokes:11},"洗":{radicalNote:"水字旁(氵)",strokes:9}}},
+  {w:"前面", z:"ㄑㄧㄢˊ ㄇㄧㄢˋ"},
+  {w:"學校", z:"ㄒㄩㄝˊ ㄒㄧㄠˋ"},
+  {w:"朋友", z:"ㄆㄥˊ ㄧㄡˇ"}
+];
+var wordPairs = lsGet(LS_WORDS, defaultWordPairs);
+rebuildCharDB();
+
+function todayStr(){
+  var d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function addDays(dateStr, days){
+  var d = new Date(dateStr+'T00:00:00');
+  d.setDate(d.getDate()+days);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+/* ============================================================
+   錯字本 + 間隔複習邏輯
+============================================================ */
+var SR_INTERVALS = [3,7,14,30]; // 天
+
+function getErrorBook(){ return lsGet(LS_ERRBOOK, {}); }
+function saveErrorBook(eb){ lsSet(LS_ERRBOOK, eb); }
+
+/* 加入錯字本（答錯 / 用提示2 / 看答案時呼叫） */
+function addToErrorBook(word, zhuyin){
+  var eb = getErrorBook();
+  if(!eb[word]){
+    eb[word] = {word:word, zhuyin:zhuyin, errorCount:0, correctStreak:0, lastReview:todayStr(), nextReview:todayStr()};
+  }
+  eb[word].errorCount++;
+  eb[word].correctStreak = 0;
+  eb[word].lastReview = todayStr();
+  eb[word].nextReview = addDays(todayStr(), 1); // 答錯：隔天重新出現
+  saveErrorBook(eb);
+  renderHomeIfActive();
+}
+
+/* 答對時呼叫（不論是否在錯字本中）：推進間隔複習 */
+function markCorrect(word, zhuyin){
+  var eb = getErrorBook();
+  if(eb[word]){
+    eb[word].correctStreak = (eb[word].correctStreak||0) + 1;
+    var idx = Math.min(eb[word].correctStreak-1, SR_INTERVALS.length-1);
+    var days = SR_INTERVALS[idx];
+    eb[word].lastReview = todayStr();
+    eb[word].nextReview = addDays(todayStr(), days);
+    saveErrorBook(eb);
+  }
+  renderHomeIfActive();
+}
+
+function markMastered(word){
+  var eb = getErrorBook();
+  delete eb[word];
+  saveErrorBook(eb);
+  renderErrorBookIfActive();
+  renderHomeIfActive();
+}
+
+function getDueReviewWords(){
+  var eb = getErrorBook();
+  var today = todayStr();
+  var due = [];
+  Object.keys(eb).forEach(function(w){
+    if(eb[w].nextReview <= today) due.push(eb[w]);
+  });
+  return due;
+}
+
+function renderHomeIfActive(){
+  if(document.getElementById('section-home').classList.contains('active')) renderHome();
+}
+function renderErrorBookIfActive(){
+  if(document.getElementById('section-errbook').classList.contains('active')) renderErrorBook();
+}
+
+/* ============================================================
+   闖關進度（每日重置）
+============================================================ */
+function getQuestProgress(){
+  var p = lsGet(LS_PROGRESS, null);
+  var today = todayStr();
+  if(!p || p.date !== today){
+    p = {date:today, level1Done:false, level2Done:false, level3Done:false};
+    lsSet(LS_PROGRESS, p);
+  }
+  return p;
+}
+function saveQuestProgress(p){ lsSet(LS_PROGRESS, p); }
+function setLevelDone(levelNum){
+  var p = getQuestProgress();
+  p['level'+levelNum+'Done'] = true;
+  saveQuestProgress(p);
+}
+
+/* ============================================================
+   字庫輪轉系統（關卡2 / 關卡3 共用）
+   規則：
+   1. 每次出題固定 BATCH_SIZE 題
+   2. 優先把「上一輪答錯（在錯字本中且尚未在本輪複習過）」的字排進這次題目
+   3. 剩下的位置從「本輪尚未複習過」的字中隨機抽取
+   4. 當本輪所有字都複習過一次後，下一輪重新打亂、清空已複習紀錄，重新開始
+   levelKey: 'recall' 或 'boss'
+============================================================ */
+var BATCH_SIZE = 5;
+
+function getRotationState(){
+  return lsGet(LS_ROTATION, {recall:{coveredWords:[]}, boss:{coveredWords:[]}});
+}
+function saveRotationState(rs){ lsSet(LS_ROTATION, rs); }
+
+/* 取得本輪「尚未複習過」的字（以目前 wordPairs 為準，若老師更新過題目，自動只保留還存在的字） */
+function getUncoveredWords(levelKey){
+  var rs = getRotationState();
+  var covered = (rs[levelKey] && rs[levelKey].coveredWords) || [];
+  var allWords = wordPairs.map(function(p){return p.w;});
+  /* 過濾：covered 中已經不在 wordPairs 的字要排除（老師可能換題了） */
+  covered = covered.filter(function(w){ return allWords.indexOf(w)>=0; });
+  rs[levelKey] = {coveredWords:covered};
+  saveRotationState(rs);
+  return wordPairs.filter(function(p){ return covered.indexOf(p.w)<0; });
+}
+
+function markWordsCovered(levelKey, words){
+  var rs = getRotationState();
+  if(!rs[levelKey]) rs[levelKey]={coveredWords:[]};
+  words.forEach(function(w){
+    if(rs[levelKey].coveredWords.indexOf(w)<0) rs[levelKey].coveredWords.push(w);
+  });
+  saveRotationState(rs);
+}
+
+function resetRotationIfFullyCovered(levelKey){
+  var rs = getRotationState();
+  var covered = (rs[levelKey] && rs[levelKey].coveredWords) || [];
+  var allWords = wordPairs.map(function(p){return p.w;});
+  var allCovered = allWords.length>0 && allWords.every(function(w){ return covered.indexOf(w)>=0; });
+  if(allCovered){
+    rs[levelKey] = {coveredWords:[]};
+    saveRotationState(rs);
+    return true; // 代表剛完成一輪，已重置
+  }
+  return false;
+}
+
+/* 產生這次要考的題目清單（固定 BATCH_SIZE 題，或詞彙總數不足時用全部） */
+function buildRotationBatch(levelKey){
+  /* 如果本輪已經全部複習過，先重置重新開始一輪 */
+  resetRotationIfFullyCovered(levelKey);
+
+  var errWords = Object.keys(getErrorBook()); // 上一輪答錯、優先補考的字
+  var uncovered = getUncoveredWords(levelKey); // 本輪尚未複習過的字（pair 物件陣列）
+  var uncoveredWordSet = uncovered.map(function(p){return p.w;});
+
+  var batch = [];
+  var usedWords = {};
+
+  /* 優先塞入錯字本中、且本輪尚未複習過的字 */
+  shuffle(errWords).forEach(function(w){
+    if(batch.length>=BATCH_SIZE) return;
+    if(usedWords[w]) return;
+    if(uncoveredWordSet.indexOf(w)<0) return; // 只補本輪還沒複習過的，已複習過的錯字留到下輪自然排程
+    var pair = wordPairs.find(function(p){return p.w===w;});
+    if(pair){ batch.push(pair); usedWords[w]=true; }
+  });
+
+  /* 剩下名額從本輪尚未複習過的字中隨機補滿 */
+  var remaining = uncovered.filter(function(p){ return !usedWords[p.w]; });
+  shuffle(remaining).forEach(function(p){
+    if(batch.length>=BATCH_SIZE) return;
+    batch.push(p); usedWords[p.w]=true;
+  });
+
+  /* 如果還是不夠（題庫總數小於 BATCH_SIZE），從全部詞彙裡補（允許同一輪重複出現） */
+  if(batch.length < Math.min(BATCH_SIZE, wordPairs.length)){
+    shuffle(wordPairs).forEach(function(p){
+      if(batch.length>=BATCH_SIZE) return;
+      if(usedWords[p.w]) return;
+      batch.push(p); usedWords[p.w]=true;
+    });
+  }
+
+  return shuffle(batch);
+}
+
+/* ============================================================
+   老師管理
+============================================================ */
+function toggleMgr(){
+  var p=document.getElementById('mgrPanel');
+  p.classList.toggle('open');
+  if(p.classList.contains('open')){
+    document.getElementById('wordInput').value = wordPairs.map(function(pair){
+      var line = pair.w+','+pair.z;
+      if(pair.radicalMap){
+        var chars = pair.w.split('');
+        var parts = chars.map(function(ch){
+          var info = pair.radicalMap[ch];
+          if(!info) return '';
+          var note = info.radicalNote||'';
+          var strokes = info.strokes||'';
+          return note||strokes ? (note+':'+strokes) : '';
+        });
+        if(parts.some(function(s){return s;})) line += ','+parts.join('|');
+      }
+      return line;
+    }).join('\n');
+  }
+}
+function updateWords(){
+  var raw=document.getElementById('wordInput').value.trim(),pairs=[];
+  raw.split('\n').filter(function(l){return l.trim();}).forEach(function(l){
+    var cols=l.split(',');
+    if(cols.length<2) return;
+    var w=cols[0].trim();
+    var z=cols[1].trim();
+    if(!w||!z) return;
+    var pair={w:w,z:z};
+    if(cols.length>=3 && cols[2].trim()){
+      var chars=w.split('');
+      var radicalParts=cols[2].split('|');
+      var radicalMap={};
+      radicalParts.forEach(function(part,idx){
+        part=part.trim();
+        if(!part||!chars[idx]) return;
+        var kv=part.split(':');
+        var note=(kv[0]||'').trim();
+        var strokes=kv[1]?parseInt(kv[1].trim()):null;
+        if(note||strokes){
+          radicalMap[chars[idx]]={};
+          if(note) radicalMap[chars[idx]].radicalNote=note;
+          if(strokes) radicalMap[chars[idx]].strokes=strokes;
+        }
+      });
+      if(Object.keys(radicalMap).length) pair.radicalMap=radicalMap;
+    }
+    pairs.push(pair);
+  });
+  if(!pairs.length){alert('請至少輸入一組！');return;}
+  wordPairs=pairs;
+  rebuildCharDB();
+  lsSet(LS_WORDS, wordPairs);
+  document.getElementById('mgrPanel').classList.remove('open');
+  alert('✅ 題目已更新！');
+  goHome();
+}
+function resetAllProgress(){
+  if(!confirm('確定要清空所有學習紀錄嗎？（錯字本、複習排程、闖關進度、輪轉紀錄都會重置）')) return;
+  localStorage.removeItem(LS_ERRBOOK);
+  localStorage.removeItem(LS_PROGRESS);
+  localStorage.removeItem(LS_ROTATION);
+  alert('已清空，重新開始！');
+  document.getElementById('mgrPanel').classList.remove('open');
+  goHome();
+}
+
+/* ============================================================
+   共用工具
+============================================================ */
+function shuffle(arr){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function splitZhuyin(z){return z.split(' ').filter(function(s){return s.trim();});}
+
+function drawGrid(ctx,sz){
+  ctx.clearRect(0,0,sz,sz);
+  ctx.fillStyle='#FFFDF9';ctx.beginPath();rr(ctx,0,0,sz,sz,11);ctx.fill();
+  ctx.strokeStyle='#FFD4A8';ctx.lineWidth=1;ctx.setLineDash([5,4]);
+  var h=sz/2;
+  ctx.beginPath();
+  ctx.moveTo(h,0);ctx.lineTo(h,sz);ctx.moveTo(0,h);ctx.lineTo(sz,h);
+  ctx.moveTo(0,0);ctx.lineTo(sz,sz);ctx.moveTo(sz,0);ctx.lineTo(0,sz);
+  ctx.stroke();ctx.setLineDash([]);
+  ctx.strokeStyle='#FFBB66';ctx.lineWidth=2.5;
+  ctx.beginPath();rr(ctx,1,1,sz-2,sz-2,10);ctx.stroke();
+}
+function rr(ctx,x,y,w,h,r){
+  ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
+}
+function getPos(e,c){
+  var rect=c.getBoundingClientRect(),sx=c.width/rect.width,sy=c.height/rect.height,src=e.touches?e.touches[0]:e;
+  return{x:(src.clientX-rect.left)*sx,y:(src.clientY-rect.top)*sy};
+}
+function spawnStars(el){
+  var rect=el.getBoundingClientRect(),cx=rect.left+rect.width/2,cy=rect.top+rect.height/2,stars=['⭐','✨','🌟','💛','🎉','🎊'];
+  for(var i=0;i<5;i++){
+    var e=document.createElement('div');e.className='star-burst';
+    e.textContent=stars[Math.floor(Math.random()*stars.length)];
+    e.style.left=(cx+Math.random()*60-30)+'px';e.style.top=(cy+Math.random()*40-20)+'px';
+    document.body.appendChild(e);setTimeout(function(x){x.remove();},950,e);
+  }
+}
+function launchConfetti(){
+  var cel=document.getElementById('celebration'),colors=['#FF8C42','#FFD166','#4CAF7D','#5B9BD5','#E8534A','#9B59B6','#F7DC6F'];
+  for(var i=0;i<50;i++){
+    var el=document.createElement('div');el.className='confetti';
+    el.style.left=Math.random()*100+'vw';
+    el.style.background=colors[Math.floor(Math.random()*colors.length)];
+    var s=(7+Math.random()*8)+'px';el.style.width=s;el.style.height=s;
+    el.style.borderRadius=Math.random()>0.5?'50%':'2px';
+    el.style.animationDuration=(1.4+Math.random()*1.6)+'s';
+    el.style.animationDelay=(Math.random()*0.7)+'s';
+    cel.appendChild(el);
+  }
+  setTimeout(function(){cel.innerHTML='';},3500);
+}
+var ENCOURAGE_MSGS = [
+  {title:"差一點成功！", sub:"再仔細看看，你可以的！"},
+  {title:"我們再挑戰一次！", sub:"每一次練習都是進步！"},
+  {title:"這個字快學會了！", sub:"多寫幾次就會記住喔！"},
+  {title:"快要對了！", sub:"別放棄，再試試看！"},
+  {title:"加油，你很棒！", sub:"再想一想，相信自己！"}
+];
+function randomEncourage(){ return ENCOURAGE_MSGS[Math.floor(Math.random()*ENCOURAGE_MSGS.length)]; }
+
+/* ============================================================
+   畫面切換
+============================================================ */
+function hideAllSections(){
+  document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');});
+  document.querySelectorAll('.back-to-map-btn').forEach(function(b){b.style.display='none';});
+}
+function showSectionOnly(id, backBtnId){
+  hideAllSections();
+  document.getElementById('section-'+id).classList.add('active');
+  if(backBtnId) document.getElementById(backBtnId).style.display='flex';
+  window.scrollTo(0,0);
+}
+function goHome(){
+  showSectionOnly('home', null);
+  renderHome();
+}
+
+/* ============================================================
+   首頁 / 闖關地圖渲染
+============================================================ */
+function renderHome(){
+  var due = getDueReviewWords();
+  var banner = document.getElementById('reviewBanner');
+  if(due.length > 0){
+    banner.style.display='flex';
+    document.getElementById('reviewCount').textContent = due.length;
+  } else {
+    banner.style.display='none';
+  }
+
+  var p = getQuestProgress();
+  var levels = [
+    {n:1, name:'連連看', desc:'認得國字與注音', icon:'🎯', done:p.level1Done, boss:false},
+    {n:2, name:'看字默寫', desc:'每次5題・記住字形，回想寫出來', icon:'✏️', done:p.level2Done, boss:false},
+    {n:3, name:'聽音寫字', desc:'每次5題・模擬考試，全靠自己！', icon:'🔊', done:p.level3Done, boss:true}
+  ];
+
+  var path = document.getElementById('levelPath');
+  path.innerHTML='';
+  var unlockedUpTo = 0; // index of first locked level
+  for(var i=0;i<levels.length;i++){
+    if(i===0 || levels[i-1].done) unlockedUpTo = i;
+    else break;
+  }
+
+  levels.forEach(function(lv, idx){
+    if(idx>0){
+      var conn=document.createElement('div');
+      conn.className='level-connector'+(levels[idx-1].done?' completed':'');
+      path.appendChild(conn);
+    }
+    var locked = idx > unlockedUpTo;
+    var isCurrent = idx === unlockedUpTo && !lv.done;
+    var card=document.createElement('div');
+    card.className='level-card'+(locked?' locked':'')+(lv.done?' completed':'')+(isCurrent?' current':'');
+    var statusIcon = lv.done ? '✅' : (locked ? '🔒' : '▶️');
+    card.innerHTML =
+      '<div class="level-num">'+(lv.done?'✓':lv.n)+'</div>'+
+      '<div class="level-info">'+
+        '<div class="level-name">'+lv.icon+' 第'+lv.n+'關：'+lv.name+(lv.boss?'<span class="level-boss-tag">BOSS</span>':'')+'</div>'+
+        '<div class="level-desc">'+lv.desc+'</div>'+
+      '</div>'+
+      '<div class="level-status">'+statusIcon+'</div>';
+    if(!locked){
+      card.onclick = function(n){ return function(){ enterLevel(n); }; }(lv.n);
+    }
+    path.appendChild(card);
+  });
+
+  renderErrorBookBadge();
+}
+
+function renderErrorBookBadge(){
+  var eb = getErrorBook();
+  var count = Object.keys(eb).length;
+  var badge = document.getElementById('errbookBadge');
+  if(count>0){ badge.style.display='inline-block'; badge.textContent=count; }
+  else{ badge.style.display='none'; }
+}
+
+function enterLevel(n){
+  if(n===1) startMatchLevel();
+  if(n===2) startRecallLevel();
+  if(n===3) startBossLevel();
+}
+
+function goToLevelComplete(n){
+  setLevelDone(n);
+  if(n < 3){
+    goHome();
+  } else {
+    showSectionOnly('questcomplete', null);
+    launchConfetti();
+  }
+}
+
+/* 待複習：點首頁橫幅，直接進「聽音寫字」式的複習（用看字默寫的回想機制，針對到期字） */
+var reviewQueue = [];
+var reviewMode = false;
+function startReviewSession(){
+  reviewQueue = getDueReviewWords().map(function(item){ return {w:item.word, z:item.zhuyin}; });
+  if(!reviewQueue.length){ alert('目前沒有待複習的字囉！'); return; }
+  reviewMode = true;
+  recallQueueWords = reviewQueue;
+  recallIdx = 0;
+  showSectionOnly('recall', 'backBtnRecall');
+  document.querySelector('#section-recall .game-header h2').textContent = '⏰ 複習時間';
+  document.querySelector('#section-recall .game-header p').textContent = '把這些之前學過的字再寫一次，加深記憶！';
+  loadRecallQuestion();
+}
+
+/* ============================================================
+   關卡一：連連看（認字）
+============================================================ */
+var mSel=null,mCount=0;
+function startMatchLevel(){
+  showSectionOnly('match','backBtnMatch');
+  initMatch();
+}
+function initMatch(){
+  mSel=null;mCount=0;
+  document.getElementById('matchResult').classList.remove('show');
+  updMS();
+  var cc=document.getElementById('charCol'),zc=document.getElementById('zhuCol');
+  cc.innerHTML='';zc.innerHTML='';
+  var zo=shuffle(wordPairs.map(function(_,i){return i;}));
+  wordPairs.forEach(function(p,i){cc.appendChild(mkCard(p.w,i,'char','char-card'));});
+  zo.forEach(function(i){zc.appendChild(mkCard(wordPairs[i].z,i,'zhu','zhu-card'));});
+}
+function mkCard(text,idx,type,cls){
+  var c=document.createElement('div');c.className='match-card '+cls;
+  c.textContent=text;c.dataset.idx=idx;c.dataset.type=type;
+  c.onclick=function(){onCC(this);};return c;
+}
+function onCC(card){
+  if(card.classList.contains('matched')||card.classList.contains('wrong'))return;
+  if(!mSel){clrSel();card.classList.add('selected');mSel=card;return;}
+  if(mSel===card){clrSel();mSel=null;return;}
+  if(mSel.dataset.type===card.dataset.type){clrSel();card.classList.add('selected');mSel=card;return;}
+  var cc=mSel.dataset.type==='char'?mSel:card,zc=mSel.dataset.type==='zhu'?mSel:card;
+  mSel=null;
+  if(parseInt(cc.dataset.idx)===parseInt(zc.dataset.idx)){
+    cc.classList.remove('selected');zc.classList.remove('selected');
+    cc.classList.add('matched');zc.classList.add('matched');
+    mCount++;updMS();spawnStars(cc);
+    if(mCount===wordPairs.length){
+      setTimeout(function(){document.getElementById('matchResult').classList.add('show');launchConfetti();},450);
+    }
+  } else {
+    cc.classList.add('wrong');zc.classList.add('wrong');
+    setTimeout(function(){cc.classList.remove('wrong','selected');zc.classList.remove('wrong','selected');},600);
+  }
+}
+function clrSel(){document.querySelectorAll('.match-card.selected').forEach(function(c){c.classList.remove('selected');});}
+function updMS(){
+  var t=wordPairs.length;
+  document.getElementById('matchScore').textContent='已配對 '+mCount+' / '+t+' 對';
+  document.getElementById('matchProgress').style.width=(t>0?mCount/t*100:0)+'%';
+}
+
+/* ============================================================
+   關卡二：看字默寫（核心關卡 - Recall）
+============================================================ */
+var recallIdx = 0;
+var recallQueueWords = null; // null = 使用 wordPairs；否則使用自訂佇列（複習用）
+var recallHintLevel = 0; // 0=無, 1=部首, 2=筆畫, 3=答案
+var recallErase=false, recallDrawing=false, recallActiveWC=null;
+var recallFlashTimer=null;
+
+function startRecallLevel(){
+  reviewMode = false;
+  recallQueueWords = buildRotationBatch('recall');
+  recallIdx = 0;
+  showSectionOnly('recall','backBtnRecall');
+  document.querySelector('#section-recall .game-header h2').textContent = '✏️ 第二關：看字默寫';
+  document.querySelector('#section-recall .game-header p').textContent = '仔細看詞語，3 秒後它會消失，靠記憶把它寫出來！';
+  loadRecallQuestion();
+}
+
+function currentRecallList(){ return recallQueueWords || wordPairs; }
+
+function loadRecallQuestion(){
+  var list = currentRecallList();
+  if(recallIdx >= list.length){
+    finishRecallLevel();
+    return;
+  }
+  recallHintLevel = 0;
+  var pair = list[recallIdx];
+  document.getElementById('recallCounter').textContent = '第 '+(recallIdx+1)+' 題 / 共 '+list.length+' 題';
+  document.getElementById('recallProgress').style.width = (recallIdx/list.length*100)+'%';
+  showFlashStage(pair);
+}
+
+function showFlashStage(pair){
+  var stage = document.getElementById('recallStage');
+  stage.innerHTML =
+    '<div class="recall-instruction">👀 仔細看，記住它的樣子！</div>'+
+    '<div class="recall-flash-word">'+pair.w+'</div>'+
+    '<div class="recall-timer-bar"><div class="recall-timer-fill" id="recallTimerFill"></div></div>'+
+    '<div class="recall-countdown-text" id="recallCountdownText">3 秒後消失...</div>';
+
+  var fill = document.getElementById('recallTimerFill');
+  var countdownText = document.getElementById('recallCountdownText');
+  var total = 3000, start = Date.now();
+
+  if(recallFlashTimer) clearInterval(recallFlashTimer);
+  recallFlashTimer = setInterval(function(){
+    var elapsed = Date.now()-start;
+    var remain = Math.max(0, total-elapsed);
+    fill.style.width = (remain/total*100)+'%';
+    countdownText.textContent = Math.ceil(remain/1000)+' 秒後消失...';
+    if(remain<=0){
+      clearInterval(recallFlashTimer);
+      showWriteStage(pair);
+    }
+  }, 50);
+}
+
+function showWriteStage(pair){
+  var stage = document.getElementById('recallStage');
+  stage.innerHTML =
+    '<div class="recall-write-label">✍️ 請寫出剛剛看到的詞語</div>'+
+    '<div class="hint-progress" id="hintProgress"></div>'+
+    '<div class="hint-display" id="hintDisplay"></div>'+
+    '<div class="canvases-row" id="canvasesRow"></div>'+
+    '<div class="recall-btns">'+
+      '<button class="recall-btn btn-clear" onclick="clearRecallCanvas()">🗑️ 清除重寫</button>'+
+      '<button class="recall-btn btn-eraser" id="recallEraserBtn" onclick="toggleRecallEraser()">⬜ 橡皮擦</button>'+
+      '<button class="recall-btn btn-hint" onclick="useRecallHint()">💡 我卡住了，給我提示</button>'+
+      '<button class="recall-btn btn-submit" onclick="submitRecallAnswer()">✅ 我寫好了！提交答案</button>'+
+    '</div>'+
+    '<div class="feedback-banner" id="recallFeedback"></div>';
+  buildRecallCanvases(pair);
+  renderHintDots();
+}
+
+function renderHintDots(){
+  var wrap = document.getElementById('hintProgress');
+  if(!wrap) return;
+  wrap.innerHTML='';
+  for(var i=0;i<3;i++){
+    var dot=document.createElement('div');
+    dot.className='hint-dot'+(i<recallHintLevel?' used':'');
+    wrap.appendChild(dot);
+  }
+}
+
+function recallSlotSize(n){
+  var row=document.getElementById('canvasesRow');
+  var avail=(row&&row.clientWidth)||300;
+  return Math.min(170,Math.max(120,Math.floor((avail-(n-1)*10)/n)));
+}
+
+function buildRecallCanvases(pair){
+  var row=document.getElementById('canvasesRow');
+  row.innerHTML='';
+  var chars=pair.w.split('');
+  var sz=recallSlotSize(chars.length);
+  chars.forEach(function(ch,i){
+    var slot=document.createElement('div');slot.className='char-slot';
+    var lbl=document.createElement('div');lbl.className='char-slot-zhu';lbl.id='charHintLbl'+i;
+    var wrap=document.createElement('div');wrap.className='char-canvas-wrap';wrap.id='charWrap'+i;
+    var wc=document.createElement('canvas');wc.className='wc';wc.width=sz;wc.height=sz;wc.style.width=sz+'px';wc.style.height=sz+'px';
+    var gc=document.createElement('canvas');gc.className='gc';gc.width=sz;gc.height=sz;gc.style.width=sz+'px';gc.style.height=sz+'px';
+    wc._char=ch;
+    wrap.appendChild(gc);wrap.appendChild(wc);
+    slot.appendChild(lbl);slot.appendChild(wrap);row.appendChild(slot);
+    var ctx=wc.getContext('2d');ctx.lineCap='round';ctx.lineJoin='round';drawGrid(ctx,sz);
+    bindRecallEvents(wc);
+  });
+}
+function bindRecallEvents(wc){
+  wc.addEventListener('touchstart',function(e){e.preventDefault();recallDrawing=true;recallActiveWC=wc;var ctx=wc.getContext('2d');var p=getPos(e,wc);ctx.beginPath();ctx.moveTo(p.x,p.y);},{passive:false});
+  wc.addEventListener('touchmove',function(e){e.preventDefault();if(!recallDrawing||recallActiveWC!==wc)return;recallDraw(wc.getContext('2d'),getPos(e,wc));},{passive:false});
+  wc.addEventListener('touchend',function(e){e.preventDefault();recallDrawing=false;},{passive:false});
+  wc.addEventListener('mousedown',function(e){recallDrawing=true;recallActiveWC=wc;var ctx=wc.getContext('2d');var p=getPos(e,wc);ctx.beginPath();ctx.moveTo(p.x,p.y);});
+  wc.addEventListener('mousemove',function(e){if(!recallDrawing||recallActiveWC!==wc)return;recallDraw(wc.getContext('2d'),getPos(e,wc));});
+  wc.addEventListener('mouseup',function(){recallDrawing=false;});
+  wc.addEventListener('mouseleave',function(){recallDrawing=false;});
+}
+function recallDraw(ctx,pos){
+  if(recallErase){ctx.save();ctx.globalCompositeOperation='destination-out';ctx.beginPath();ctx.arc(pos.x,pos.y,16,0,Math.PI*2);ctx.fill();ctx.restore();}
+  else{ctx.strokeStyle='#1A0A00';ctx.lineWidth=4.5;ctx.lineTo(pos.x,pos.y);ctx.stroke();}
+}
+function clearRecallCanvas(){
+  document.querySelectorAll('#canvasesRow canvas.wc').forEach(function(wc){var ctx=wc.getContext('2d');ctx.lineCap='round';ctx.lineJoin='round';drawGrid(ctx,wc.width);});
+}
+function toggleRecallEraser(){
+  recallErase=!recallErase;
+  var btn=document.getElementById('recallEraserBtn');
+  if(btn) btn.classList.toggle('active-tool',recallErase);
+  document.querySelectorAll('#canvasesRow canvas.wc').forEach(function(wc){wc.style.cursor=recallErase?'cell':'crosshair';});
+}
+
+/* 分級提示：1=部首 2=筆畫 3=完整答案 */
+function useRecallHint(){
+  var list=currentRecallList();
+  var pair=list[recallIdx];
+  if(recallHintLevel>=3) return;
+  recallHintLevel++;
+  renderHintDots();
+  var hintBox=document.getElementById('hintDisplay');
+  var chars=pair.w.split('');
+  var numLabels=['第一字','第二字','第三字','第四字','第五字'];
+
+  if(recallHintLevel===1){
+    var parts=chars.map(function(ch,i){
+      var info=lookupChar(ch);
+      var label=numLabels[i]||('第'+(i+1)+'字');
+      return (info && info.radicalNote) ? (label+'：'+info.radicalNote) : (label+'：再仔細想想看');
+    });
+    hintBox.textContent='提示 1・部首　'+parts.join('　');
+    hintBox.classList.add('show');
+  } else if(recallHintLevel===2){
+    var parts2=chars.map(function(ch,i){
+      var info=lookupChar(ch);
+      var label=numLabels[i]||('第'+(i+1)+'字');
+      return (info && info.strokes) ? (label+'：'+info.strokes+' 畫') : (label+'：再想一下筆畫');
+    });
+    hintBox.textContent='提示 2・筆畫數　'+parts2.join('　');
+    hintBox.classList.add('show');
+    /* 用提示2 -> 加入錯字本 */
+    addToErrorBook(pair.w, pair.z);
+  } else if(recallHintLevel===3){
+    hintBox.textContent='完整答案：'+pair.w+'（'+pair.z+'）';
+    hintBox.classList.add('show');
+    showRecallGuide(pair);
+    addToErrorBook(pair.w, pair.z);
+  }
+}
+
+function showRecallGuide(pair){
+  var chars=pair.w.split('');
+  chars.forEach(function(ch,i){
+    var wrap=document.getElementById('charWrap'+i);
+    if(!wrap) return;
+    wrap.classList.add('show-guide');
+    var gc=wrap.querySelector('canvas.gc');
+    if(!gc) return;
+    var ctx=gc.getContext('2d');
+    var sz=gc.width;
+    ctx.clearRect(0,0,sz,sz);
+    ctx.fillStyle='#FF8C42';
+    ctx.font='bold '+Math.floor(sz*0.68)+'px "Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(ch, sz/2, sz/2);
+  });
+}
+
+function submitRecallAnswer(){
+  /* 因為畫布是手寫筆跡，系統無法自動判斷字對不對，所以用「自我檢查」流程：
+     讓孩子按下提交後，揭示正確答案，由孩子自己核對；
+     若孩子在送出前已經使用過提示3（看答案），視為需要練習；
+     否則視為自行完成，給予成功回饋並推進間隔複習。 */
+  var list=currentRecallList();
+  var pair=list[recallIdx];
+
+  showRecallGuide(pair); // 提交後一律揭示正確答案讓孩子核對
+
+  if(!reviewMode) markWordsCovered('recall', [pair.w]);
+
+  var feedback=document.getElementById('recallFeedback');
+  if(recallHintLevel>=2){
+    /* 用過部首以上提示，視為「還需要加強」 */
+    var msg=randomEncourage();
+    feedback.className='feedback-banner encourage show';
+    feedback.innerHTML='<div>'+msg.title+'</div><div class="feedback-sub">'+msg.sub+'　（已加入錯字本，之後會再複習）</div>'+
+      '<button class="feedback-next-btn" onclick="nextRecallQuestion()">下一題 ➡️</button>';
+  } else {
+    markCorrect(pair.w, pair.z);
+    feedback.className='feedback-banner success show';
+    feedback.innerHTML='<div>太棒了！你記住了「'+pair.w+'」！</div><div class="feedback-sub">繼續保持，下一個詞語等你挑戰！</div>'+
+      '<button class="feedback-next-btn" onclick="nextRecallQuestion()">下一題 ➡️</button>';
+    spawnStars(feedback);
+  }
+}
+
+function nextRecallQuestion(){
+  recallIdx++;
+  loadRecallQuestion();
+}
+
+function finishRecallLevel(){
+  if(reviewMode){
+    reviewMode=false;
+    alert('🎉 複習完成！這些字的記憶又加深了一次！');
+    goHome();
+    return;
+  }
+  showRecallLevelResult();
+}
+function showRecallLevelResult(){
+  var stage=document.getElementById('recallStage');
+  stage.innerHTML =
+    '<div class="game-result show">'+
+      '<div class="result-emoji">🎉</div>'+
+      '<div class="result-text">第二關過關！默寫練習完成！</div>'+
+      '<button class="reset-btn" onclick="goToLevelComplete(2)">前往下一關 ➡️</button>'+
+    '</div>';
+  launchConfetti();
+}
+
+/* ============================================================
+   關卡三：聽音寫字（Boss關）
+============================================================ */
+var bossIdx=0, bossErase=false, bossDrawing=false, bossActiveWC=null;
+var bossQueueWords = null;
+
+function startBossLevel(){
+  bossIdx=0;
+  bossQueueWords = buildRotationBatch('boss');
+  showSectionOnly('boss','backBtnBoss');
+  loadBossQuestion();
+}
+
+function currentBossList(){ return bossQueueWords || wordPairs; }
+
+function speakBossWord(){
+  var list=currentBossList();
+  var pair=list[bossIdx];
+  if(!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  var utt=new SpeechSynthesisUtterance(pair.w);
+  utt.lang='zh-TW';utt.rate=0.75;utt.pitch=1.05;
+  var btn=document.getElementById('bossPlayBtn');
+  btn.classList.add('playing');
+  utt.onend=function(){btn.classList.remove('playing');};
+  window.speechSynthesis.speak(utt);
+}
+
+function bossSlotSize(n){
+  return Math.min(150,Math.max(110,Math.floor((300-(n-1)*10)/n)));
+}
+
+function loadBossQuestion(){
+  var list=currentBossList();
+  if(bossIdx>=list.length){ finishBossLevel(); return; }
+  document.getElementById('bossCounter').textContent='第 '+(bossIdx+1)+' 題 / 共 '+list.length+' 題';
+  document.getElementById('bossProgress').style.width=(bossIdx/list.length*100)+'%';
+
+  var pair=list[bossIdx];
+  var area=document.getElementById('bossWriteArea');
+  var nChars=pair.w.length;
+  var nZhu=splitZhuyin(pair.z).length;
+
+  area.innerHTML =
+    '<div class="recall-write-label">✍️ 聽完之後，寫出國字：</div>'+
+    '<div class="canvases-row" id="bossCharRow"></div>'+
+    '<div class="recall-write-label">✍️ 再寫出注音：</div>'+
+    '<div class="canvases-row" id="bossZhuRow"></div>'+
+    '<div class="recall-btns">'+
+      '<button class="recall-btn btn-clear" onclick="clearBossCanvas()">🗑️ 清除重寫</button>'+
+      '<button class="recall-btn btn-eraser" id="bossEraserBtn" onclick="toggleBossEraser()">⬜ 橡皮擦</button>'+
+      '<button class="recall-btn btn-hint" onclick="toggleBossAnswer()">👁️ 看正確答案（描紅）</button>'+
+      '<button class="recall-btn btn-submit" onclick="submitBossAnswer()">✅ 我寫好了！提交答案</button>'+
+    '</div>'+
+    '<div class="feedback-banner" id="bossFeedback"></div>';
+
+  buildBossCanvasRow('bossCharRow', nChars, 'char', pair);
+  buildBossCanvasRow('bossZhuRow', nZhu, 'zhu', pair);
+}
+
+function buildBossCanvasRow(rowId, n, type, pair){
+  var row=document.getElementById(rowId);
+  row.innerHTML='';
+  var sz=bossSlotSize(n);
+  var chars = type==='char' ? pair.w.split('') : splitZhuyin(pair.z);
+  chars.forEach(function(val,i){
+    var slot=document.createElement('div');slot.className='char-slot';
+    var wrap=document.createElement('div');wrap.className='char-canvas-wrap';
+    var wc=document.createElement('canvas');wc.className='wc';wc.width=sz;wc.height=sz;wc.style.width=sz+'px';wc.style.height=sz+'px';
+    var gc=document.createElement('canvas');gc.className='gc';gc.width=sz;gc.height=sz;gc.style.width=sz+'px';gc.style.height=sz+'px';
+    wc._type=type; wc._val=val;
+    wrap.appendChild(gc);wrap.appendChild(wc);
+    slot.appendChild(wrap);row.appendChild(slot);
+    var ctx=wc.getContext('2d');ctx.lineCap='round';ctx.lineJoin='round';drawGrid(ctx,sz);
+    bindBossEvents(wc);
+  });
+}
+function bindBossEvents(wc){
+  wc.addEventListener('touchstart',function(e){e.preventDefault();bossDrawing=true;bossActiveWC=wc;var ctx=wc.getContext('2d');var p=getPos(e,wc);ctx.beginPath();ctx.moveTo(p.x,p.y);},{passive:false});
+  wc.addEventListener('touchmove',function(e){e.preventDefault();if(!bossDrawing||bossActiveWC!==wc)return;bossDraw(wc.getContext('2d'),getPos(e,wc));},{passive:false});
+  wc.addEventListener('touchend',function(e){e.preventDefault();bossDrawing=false;},{passive:false});
+  wc.addEventListener('mousedown',function(e){bossDrawing=true;bossActiveWC=wc;var ctx=wc.getContext('2d');var p=getPos(e,wc);ctx.beginPath();ctx.moveTo(p.x,p.y);});
+  wc.addEventListener('mousemove',function(e){if(!bossDrawing||bossActiveWC!==wc)return;bossDraw(wc.getContext('2d'),getPos(e,wc));});
+  wc.addEventListener('mouseup',function(){bossDrawing=false;});
+  wc.addEventListener('mouseleave',function(){bossDrawing=false;});
+}
+function bossDraw(ctx,pos){
+  if(bossErase){ctx.save();ctx.globalCompositeOperation='destination-out';ctx.beginPath();ctx.arc(pos.x,pos.y,16,0,Math.PI*2);ctx.fill();ctx.restore();}
+  else{ctx.strokeStyle='#1A0A00';ctx.lineWidth=4.5;ctx.lineTo(pos.x,pos.y);ctx.stroke();}
+}
+function clearBossCanvas(){
+  document.querySelectorAll('#bossCharRow canvas.wc, #bossZhuRow canvas.wc').forEach(function(wc){
+    var ctx=wc.getContext('2d');ctx.lineCap='round';ctx.lineJoin='round';drawGrid(ctx,wc.width);
+  });
+}
+function toggleBossEraser(){
+  bossErase=!bossErase;
+  document.getElementById('bossEraserBtn').classList.toggle('active-tool',bossErase);
+  document.querySelectorAll('#bossCharRow canvas.wc, #bossZhuRow canvas.wc').forEach(function(wc){wc.style.cursor=bossErase?'cell':'crosshair';});
+}
+var bossAnswerShown=false;
+function toggleBossAnswer(){
+  bossAnswerShown=!bossAnswerShown;
+  document.querySelectorAll('#bossCharRow .char-canvas-wrap, #bossZhuRow .char-canvas-wrap').forEach(function(wrap){
+    var gc=wrap.querySelector('canvas.gc');
+    var wc=wrap.querySelector('canvas.wc');
+    if(!gc||!wc) return;
+    wrap.classList.toggle('show-guide',bossAnswerShown);
+    var ctx=gc.getContext('2d');
+    ctx.clearRect(0,0,gc.width,gc.height);
+    if(bossAnswerShown){
+      var sz=gc.width;
+      ctx.fillStyle='#FF8C42';ctx.textAlign='center';ctx.textBaseline='middle';
+      if(wc._type==='char'){
+        ctx.font='bold '+Math.floor(sz*0.65)+'px "Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif';
+      } else {
+        ctx.font='bold '+Math.floor(sz*0.32)+'px "Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif';
+      }
+      ctx.fillText(wc._val||'', sz/2, sz/2);
+    }
+  });
+  if(bossAnswerShown){
+    var list=currentBossList();
+    var pair=list[bossIdx];
+    addToErrorBook(pair.w, pair.z);
+  }
+}
+
+function submitBossAnswer(){
+  var list=currentBossList();
+  var pair=list[bossIdx];
+  markWordsCovered('boss', [pair.w]);
+  var feedback=document.getElementById('bossFeedback');
+  if(bossAnswerShown){
+    var msg=randomEncourage();
+    feedback.className='feedback-banner encourage show';
+    feedback.innerHTML='<div>'+msg.title+'</div><div class="feedback-sub">這個字已經放進錯字本，之後會再複習！</div>'+
+      '<button class="feedback-next-btn" onclick="nextBossQuestion()">下一題 ➡️</button>';
+  } else {
+    markCorrect(pair.w, pair.z);
+    feedback.className='feedback-banner success show';
+    feedback.innerHTML='<div>挑戰成功！「'+pair.w+'」記住了！</div><div class="feedback-sub">越來越厲害了！</div>'+
+      '<button class="feedback-next-btn" onclick="nextBossQuestion()">下一題 ➡️</button>';
+    spawnStars(feedback);
+  }
+}
+function nextBossQuestion(){
+  bossIdx++;
+  bossAnswerShown=false;
+  loadBossQuestion();
+}
+function finishBossLevel(){
+  var area=document.getElementById('bossWriteArea');
+  area.innerHTML =
+    '<div class="game-result show">'+
+      '<div class="result-emoji">👑</div>'+
+      '<div class="result-text">Boss 關卡完成！你超厲害！</div>'+
+      '<button class="reset-btn" onclick="goToLevelComplete(3)">完成闖關 🏆</button>'+
+    '</div>';
+  launchConfetti();
+}
+
+/* ============================================================
+   錯字本
+============================================================ */
+function openErrorBook(){
+  showSectionOnly('errbook','backBtnErrbook');
+  renderErrorBook();
+}
+function renderErrorBook(){
+  var eb=getErrorBook();
+  var words=Object.keys(eb).map(function(k){return eb[k];});
+  var list=document.getElementById('errbookList');
+  list.innerHTML='';
+  if(!words.length){
+    list.innerHTML='<div class="errbook-empty"><div class="errbook-empty-emoji">🎉</div>目前錯字本是空的，繼續保持！</div>';
+    renderErrorBookBadge();
+    return;
+  }
+  words.sort(function(a,b){return b.errorCount-a.errorCount;});
+  words.forEach(function(item){
+    var row=document.createElement('div');row.className='errbook-item';
+    var dueTxt = item.nextReview<=todayStr() ? '今天該複習了！' : ('下次複習：'+item.nextReview);
+    row.innerHTML =
+      '<div class="errbook-word">'+item.word+'</div>'+
+      '<div class="errbook-meta">'+
+        '<div class="errbook-zhuyin">'+item.zhuyin+'</div>'+
+        '<div class="errbook-stat">已錯 '+item.errorCount+' 次・'+dueTxt+'</div>'+
+      '</div>'+
+      '<div class="errbook-actions">'+
+        '<button class="eb-btn eb-btn-practice" onclick="practiceErrorWord(\''+item.word.replace(/'/g,"\\'")+'\')">再練一次</button>'+
+        '<button class="eb-btn eb-btn-mastered" onclick="markMastered(\''+item.word.replace(/'/g,"\\'")+'\')">已學會</button>'+
+      '</div>';
+    list.appendChild(row);
+  });
+  renderErrorBookBadge();
+}
+
+/* ============================================================
+   錯字本練習工具：注音積木拼拼樂
+============================================================ */
+var puzzleCurrentWord=null, puzzleData=[], dragPiece=null, touchDE=null, touchClone=null;
+
+function practiceErrorWord(word){
+  var eb=getErrorBook();
+  var item=eb[word];
+  if(!item) return;
+  puzzleCurrentWord = item;
+  showSectionOnly('puzzle','backBtnPuzzle');
+  document.getElementById('puzzleResult').classList.remove('show');
+  buildPuzzleRound(item);
+}
+
+function splitPieces(z){
+  var ini=['ㄓㄨ','ㄔㄨ','ㄕㄨ','ㄖㄨ','ㄗㄨ','ㄘㄨ','ㄙㄨ','ㄓ','ㄔ','ㄕ','ㄖ','ㄗ','ㄘ','ㄙ','ㄅ','ㄆ','ㄇ','ㄈ','ㄉ','ㄊ','ㄋ','ㄌ','ㄍ','ㄎ','ㄏ','ㄐ','ㄑ','ㄒ','ㄧ','ㄨ','ㄩ'];
+  var tones=['ˊ','ˇ','ˋ','˙'];
+  var pieces=[],rest=z,tone='';
+  for(var t=0;t<tones.length;t++){ if(rest.indexOf(tones[t])>=0){tone=tones[t];rest=rest.replace(tones[t],'');break;} }
+  if(!tone) tone='ˉ';
+  var ini2='';
+  for(var k=0;k<ini.length;k++){ if(rest.indexOf(ini[k])===0){ini2=ini[k];rest=rest.slice(ini2.length);break;} }
+  if(ini2) pieces.push(ini2);
+  if(rest) pieces.push(rest);
+  pieces.push(tone);
+  return pieces;
+}
+
+function buildPuzzleRound(item){
+  var chars=item.word.split('');
+  var zhus=splitZhuyin(item.zhuyin);
+  document.getElementById('puzzleWord').textContent=item.word;
+
+  puzzleData = chars.map(function(ch,i){
+    var ps=splitPieces(zhus[i]||'');
+    return {char:ch, pieces:ps, answer:ps.slice()};
+  });
+
+  var ca=document.getElementById('puzzleChars'); ca.innerHTML='';
+  puzzleData.forEach(function(d,ci){
+    var blk=document.createElement('div'); blk.className='puzzle-char-block';
+    var lbl=document.createElement('div'); lbl.className='puzzle-char-label'; lbl.textContent=d.char;
+    var al=document.createElement('div'); al.className='puzzle-answer-label'; al.textContent='注音格子：';
+    var dz=document.createElement('div'); dz.className='puzzle-drop-zone'; dz.dataset.charIdx=ci;
+    dz.addEventListener('dragover',function(e){e.preventDefault();dz.classList.add('drag-over');});
+    dz.addEventListener('dragleave',function(){dz.classList.remove('drag-over');});
+    dz.addEventListener('drop',function(e){e.preventDefault();dz.classList.remove('drag-over');dpPiece(dz);});
+    blk.appendChild(lbl);blk.appendChild(al);blk.appendChild(dz);
+    ca.appendChild(blk);
+  });
+
+  var allP=[];
+  puzzleData.forEach(function(d,ci){ d.pieces.forEach(function(p){ allP.push({text:p,ci:ci}); }); });
+  allP=shuffle(allP);
+  var pool=document.getElementById('puzzlePool'); pool.innerHTML='';
+  allP.forEach(function(item2,pi){ pool.appendChild(mkPiece(item2.text,pi,item2.ci)); });
+}
+
+function mkPiece(text,pi,ci){
+  var el=document.createElement('div'); el.className='piece'; el.textContent=text;
+  el.dataset.pt=text; el.dataset.ci=ci; el.draggable=true;
+  el.addEventListener('dragstart',function(e){dragPiece=el;e.dataTransfer.effectAllowed='move';});
+  el.addEventListener('dragend',function(){dragPiece=null;});
+  el.addEventListener('touchstart',function(e){
+    e.preventDefault(); touchDE=el;
+    touchClone=el.cloneNode(true);
+    touchClone.style.cssText='position:fixed;opacity:.75;pointer-events:none;z-index:9999;transform:scale(1.1);';
+    var t=e.touches[0]; touchClone.style.left=(t.clientX-25)+'px'; touchClone.style.top=(t.clientY-18)+'px';
+    document.body.appendChild(touchClone);
+  },{passive:false});
+  el.addEventListener('touchmove',function(e){
+    e.preventDefault(); if(!touchClone) return;
+    var t=e.touches[0]; touchClone.style.left=(t.clientX-25)+'px'; touchClone.style.top=(t.clientY-18)+'px';
+  },{passive:false});
+  el.addEventListener('touchend',function(e){
+    e.preventDefault();
+    if(touchClone){touchClone.remove();touchClone=null;}
+    if(!touchDE) return;
+    var t=e.changedTouches[0], target=document.elementFromPoint(t.clientX,t.clientY), dz=target;
+    while(dz && !dz.classList.contains('puzzle-drop-zone') && !dz.classList.contains('puzzle-pool') && dz!==document.body){ dz=dz.parentNode; }
+    if(dz && dz.classList.contains('puzzle-drop-zone')) dpPiece(dz);
+    else if(dz && dz.classList.contains('puzzle-pool')){ if(touchDE.parentNode!==document.getElementById('puzzlePool')) document.getElementById('puzzlePool').appendChild(touchDE); }
+    touchDE=null;
+  },{passive:false});
+  return el;
+}
+function dpPiece(dz){ var el=dragPiece||touchDE; if(!el) return; dz.appendChild(el); }
+
+function checkPuzzle(){
+  var ok=true;
+  document.querySelectorAll('#puzzleChars .puzzle-drop-zone').forEach(function(dz,ci){
+    var ps=Array.from(dz.querySelectorAll('.piece')).map(function(p){return p.dataset.pt;});
+    var exp=puzzleData[ci].answer;
+    var good = ps.length===exp.length && exp.every(function(p){return ps.indexOf(p)>=0;});
+    if(good){ dz.classList.add('correct'); }
+    else{ dz.classList.remove('correct'); dz.classList.add('wrong-flash'); ok=false; setTimeout(function(){dz.classList.remove('wrong-flash');},500); }
+  });
+  if(ok){
+    spawnStars(document.getElementById('puzzleChars'));
+    document.getElementById('puzzleResult').classList.add('show');
+  }
+}
+function resetPuzzle(){ if(puzzleCurrentWord) buildPuzzleRound(puzzleCurrentWord); document.getElementById('puzzleResult').classList.remove('show'); }
+function markPuzzleWordMastered(){
+  if(puzzleCurrentWord){ markMastered(puzzleCurrentWord.word); }
+  openErrorBook();
+}
+
+/* ============================================================
+   初始化
+============================================================ */
+window.addEventListener('load',function(){
+  goHome();
+});
+window.addEventListener('resize',function(){
+  var active=document.querySelector('.section.active');
+  if(!active) return;
+  if(active.id==='section-recall'){
+    var list=currentRecallList();
+    if(list[recallIdx] && document.getElementById('canvasesRow')) buildRecallCanvases(list[recallIdx]);
+  }
+});
+</script>
+</body>
+</html>
